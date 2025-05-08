@@ -2,7 +2,7 @@ import express from 'express';
 import { wishlistCreate } from '../controller/wishlistcontroller.js';
 const route = express.Router();
 
-route.get('/get', wishlistCreate);
+route.post('/get', wishlistCreate);
 
 export default route;
 
