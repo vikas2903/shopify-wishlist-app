@@ -37,4 +37,4 @@ async function startServer() {
 
 startServer();
 
-app.use("/api/wishlist",route )
+app.use("/api/wishlist", route)
