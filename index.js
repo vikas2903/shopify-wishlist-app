@@ -7,7 +7,8 @@ import route from "./route/wishlistroute.js";
 
 dotenv.config();
 const app = express();
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(express.json()); 
 app.use(cors()); 
 
 const MONGODB_URI = process.env.MONGODB; 
