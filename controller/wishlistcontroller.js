@@ -66,18 +66,18 @@ export const wishlistget = async (req, res) =>{
     const {customerId, email} = req.body;
 
     if(!customerId || !email){
-      return res.status(400).json({Error:" Please signup your email id not matched with your records :) "})
+      return res.status(400).json({success: false,Error:" Please signup your email id not matched with your records :) "})
     }
 
     const data = await  Wishlist.find({customerId, email});
-    res.status(200).json({success: true, wishlist: data});
+     return res.status(200).json({success: true, wishlist: data});
     
 
   }catch(error){
-    console.log("Error to get Wishlist data")
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 
 }
-
+ 
 
 

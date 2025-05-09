@@ -20,6 +20,8 @@ async function startServer() {
     await mongoose.connect(MONGODB_URI);
     console.log("MongoDB connected");
 
+    app.use("/api/wishlist", route)
+
 
     app.get("/wishlist", (req, res) => {
       res.status(200).json({ mongo: "connected" });
@@ -38,4 +40,3 @@ async function startServer() {
 
 startServer();
 
-app.use("/api/wishlist", route)
