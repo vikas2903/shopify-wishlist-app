@@ -57,3 +57,27 @@ export const wishlistCreate = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+export const wishlistget = async (req, res) =>{
+
+  try{
+    
+    const {customerId, email} = req.body;
+
+    if(!customerId || !email){
+      return res.status(400).json({Error:" Please signup your email id not matched with your records :) "})
+    }
+
+    const data = await  Wishlist.find({customerId, email});
+    res.status(200).json({success: true, wishlist: data});
+    
+
+  }catch(error){
+    console.log("Error to get Wishlist data")
+  }
+
+}
+
+
+
