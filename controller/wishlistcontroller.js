@@ -63,7 +63,7 @@ export const wishlistget = async (req, res) =>{
 
   try{
     
-    const {customerId, email} = req.body;
+    const {customerId, email, } = req.body;
 
     if(!customerId || !email){
       return res.status(400).json({success: false,Error:" Please signup your email id not matched with your records :) "})
@@ -79,5 +79,47 @@ export const wishlistget = async (req, res) =>{
 
 }
  
+
+export const wishlitremove = async (req, res) => {
+  try {
+    const { customerId, email, productHandle } = req.body;
+
+    if (!customerId || !email || !productHandle) {
+      return res.status(400).json({ 
+        success: false, 
+        error: "Missing required fields: customerId, email, or productHandle." 
+      });
+    }
+
+    // Find wishlist document
+    const wishlist = await Wishlist.findOne({ customerId, email });
+
+    if (!wishlist) {
+      return res.status(404).json({ success: false, message: "Wishlist not found." });
+    }
+
+    // Check if handle exists in the array
+    if (!wishlist.productHandle.includes(productHandle)) {
+      return res.status(404).json({ success: false, message: "Product handle not found in wishlist." });
+    }
+
+    // Remove the handle
+    wishlist.productHandle = wishlist.productHandle.filter(
+      (handle) => handle !== productHandle
+    );
+
+    await wishlist.save();
+
+    return res.status(200).json({ 
+      success: true, 
+      message: "Product handle removed from wishlist.", 
+      wishlist 
+    });
+
+  } catch (error) {
+    console.error("Wishlist Remove Error:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 
 
