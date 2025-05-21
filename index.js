@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import route from "./route/wishlistroute.js";
+import apitokenroute from "./route/apitokenroute.js";
 
 dotenv.config();
 const app = express();
@@ -26,6 +27,9 @@ async function startServer() {
 
     // Register routes BEFORE listen()
     app.use("/api/wishlist", route);
+
+
+    app.use("/", apitokenroute)
 
     // Test connection route
     app.get("/wishlist", (req, res) => {
