@@ -33,6 +33,8 @@ export const handleCallback = async (req, res) => {
     const response = await axios.post(tokenUrl, payload);
     const accessToken = response.data.access_token;
 
+    console.log(accessToken);
+
     await Apitoken.findOneAndUpdate(
       { shop },
       { accessToken },

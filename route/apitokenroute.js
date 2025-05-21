@@ -4,7 +4,7 @@ import {redirectToShopify, handleCallback} from '../controller/apitokencontrolle
 
 const apitokenroute = express.Router();
 apitokenroute.get("/auth", redirectToShopify);
-apitokenroute.get("/auth/callback", handleCallback);
+apitokenroute.post("/auth/callback", handleCallback);
 
 
 export default apitokenroute;

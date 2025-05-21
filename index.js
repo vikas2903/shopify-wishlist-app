@@ -29,7 +29,7 @@ async function startServer() {
     app.use("/api/wishlist", route);
 
 
-    app.use("/", apitokenroute)
+    app.use("/api", apitokenroute)
 
     // Test connection route
     app.get("/wishlist", (req, res) => {
