@@ -12,7 +12,9 @@ export const redirectToShopify = async (req, res) => {
   res.redirect(installUrl);
 };
 
-// https://ravistore-shop.myshopify.com/admin/oauth/authorize?client_id=7e14cea35d331d8a859a3d97b6b76175&scope=write_products,write_customers,read_products,read_orders,read_discounts&redirect_uri=https://investigators-robert-frozen-sustainable.trycloudflare.com/auth/callback&state=123
+
+// https://admin.shopify.com/store/ravistore-shop/oauth/authorize?client_id=7e14cea35d331d8a859a3d97b6b76175&scope=write_products,write_customers,read_products,read_orders,read_discounts&redirect_uri=https://shopify-app-7spy.onrender.com/auth/callback
+
 
 export const handleCallback = async (req, res) => {
   const { shop, code } = req.query;
