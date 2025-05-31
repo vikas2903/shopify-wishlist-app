@@ -1,7 +1,8 @@
 import fetch from 'node-fetch';
-
+import dotenv from 'dotenv';
+dotenv.config();
 const SHOP = process.env.SHOPIFY_TEMP_SHOPNAME;
-const ACCESS_TOKEN = process.env.SHOPIFY_TEMP_SHOPNAME;
+const ACCESS_TOKEN = process.env.SHOPIFY_TEMP_TOKEN;
 
 const shopifyFetch = async (query) => {
   const response = await fetch(`https://${SHOP}.myshopify.com/admin/api/2024-01/graphql.json`, {
