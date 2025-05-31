@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 dotenv.config();
+
 const SHOP = process.env.SHOPIFY_TEMP_SHOPNAME;
 const ACCESS_TOKEN = process.env.SHOPIFY_TEMP_TOKEN;
 
@@ -21,7 +22,6 @@ const shopifyFetch = async (query) => {
   return json;
 };
 
-// Helper to count items via pagination
 const countItems = async (queryName) => {
   let hasNextPage = true;
   let cursor = null;
@@ -54,38 +54,84 @@ const countItems = async (queryName) => {
 
 export const getDashboardData = async (req, res) => {
   try {
-    // Today's date at midnight (UTC)
+    const { range = '7d' } = req.query;
+
+    const now = new Date();
+    let startDate;
+
+    switch (range) {
+      case '1d':
+        startDate = new Date(now.setDate(now.getDate() - 1));
+        break;
+      case '1m':
+        startDate = new Date(now.setMonth(now.getMonth() - 1));
+        break;
+      case '1y':
+        startDate = new Date(now.setFullYear(now.getFullYear() - 1));
+        break;
+      case '7d':
+      default:
+        startDate = new Date(now.setDate(now.getDate() - 7));
+    }
+
+    const startISO = new Date(startDate.setUTCHours(0, 0, 0, 0)).toISOString();
     const todayISO = new Date(new Date().setUTCHours(0, 0, 0, 0)).toISOString();
 
-    // Orders placed today
-    const orderTodayQuery = `
+    // Fetch all orders since start date
+    const ordersQuery = `
       {
-        orders(first: 100, query: "created_at:>=${todayISO}") {
-          edges { node { id createdAt } }
+        orders(first: 250, query: "created_at:>=${startISO}") {
+          edges {
+            node {
+              id
+              createdAt
+            }
+          }
         }
       }
     `;
-    const ordersToday = await shopifyFetch(orderTodayQuery);
-    const orderTodayCount = ordersToday?.data?.orders?.edges?.length || 0;
 
-    // Accurate counts via pagination
+    const ordersRes = await shopifyFetch(ordersQuery);
+    const orders = ordersRes?.data?.orders?.edges || [];
+
+    // Count today's orders
+    const orderTodayCount = orders.filter(order => order.node.createdAt >= todayISO).length;
+
+    // Group orders by date
+    const groupedOrders = {};
+    orders.forEach(({ node }) => {
+      const date = new Date(node.createdAt).toISOString().split('T')[0];
+      groupedOrders[date] = (groupedOrders[date] || 0) + 1;
+    });
+
+    const orderTrends = Object.entries(groupedOrders)
+      .sort(([a], [b]) => new Date(a) - new Date(b))
+      .map(([date, count]) => ({ date, count }));
+
+    // Additional counts
+    const totalOrderCount = await countItems("orders");
     const productCount = await countItems("products");
     const customerCount = await countItems("customers");
 
-    // Conversion rate — replace with real session value if available
+    // Dummy sessions for conversion rate
     const sessions = 1000;
     const conversionRate = ((orderTodayCount / sessions) * 100).toFixed(2);
 
     res.json({
       success: true,
       orderTodayCount,
+      totalOrderCount,
       productCount,
       customerCount,
       conversionRate: `${conversionRate}%`,
+      orderTrends
     });
 
   } catch (error) {
     console.error("❌ Error fetching dashboard data:", error.message);
-    res.status(500).json({ error: "Failed to fetch dashboard data", details: error.message });
+    res.status(500).json({
+      error: "Failed to fetch dashboard data",
+      details: error.message
+    });
   }
-};
+}; 
