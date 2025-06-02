@@ -134,4 +134,4 @@ export const getDashboardData = async (req, res) => {
       details: error.message
     });
   }
-}; 
+};
