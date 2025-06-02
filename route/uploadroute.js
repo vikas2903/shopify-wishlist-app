@@ -5,4 +5,4 @@ const uploadroute = express.Router();
 
 uploadroute.post('/section', uploadBlockSection);
 
-export default uploadroute;
+export default uploadroute; 
