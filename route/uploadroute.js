@@ -1,9 +1,9 @@
 const express = require('express');
 
-import  {uploadSlideshowSection} from ('../controller/uploadBlockSection.js');
+import  {uploadBlockSection} from ('../controller/uploadBlockSection.js');
 
 const uploadroute = express.Router();
 
-uploadroute.post('/section', uploadSlideshowSection);
+uploadroute.post('/section', uploadBlockSection);
 
 module.exports = uploadroute;
