@@ -71,4 +71,4 @@ const uploadBlockSection = async (req, res) => {
   }
 };
 
-module.exports = uploadBlockSection;
+export default uploadBlockSection;
