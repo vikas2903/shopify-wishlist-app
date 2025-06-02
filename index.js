@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import route from "./route/wishlistroute.js";
 import apitokenroute from "./route/apitokenroute.js";
 import dashboardroute from "./route/dashboardRoutes.js";
+import {uploadroute} from "./route/uploadroute.js";
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ async function startServer() {
 
     // Register routes BEFORE listen()
     app.use("/api/wishlist", route);
+    app.use("/api/upload", uploadroute);
 
 
     app.use("/api", apitokenroute)

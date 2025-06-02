@@ -1,0 +1,158 @@
+<div id="offer-slider">
+  {% for offer in section.blocks %}
+    <div class="ds-offer-slide" style="
+      --text-color: {{ offer.settings.text_color }};
+      --border-color: {{ offer.settings.border_color }};
+      --btn-bg: {{ offer.settings.button_bg_color }};
+      --btn-text: {{ offer.settings.button_text_color }};
+      --code-bg: {{ offer.settings.code_bg_color }};
+      font-family: {{ section.settings.block_font.family }};
+    ">
+      <div class="of-top" style="
+        color: var(--text-color);
+        border: 1px dashed var(--border-color);
+      ">
+        {{ offer.settings.offer_title }}
+      </div>
+      <div class="of-bt" style="
+        background-color: var(--btn-bg);
+        color: var(--btn-text);
+      ">
+        Use Code:
+        <span class="code-btn" style="background-color: var(--code-bg);">
+          {{ offer.settings.offer_code }}
+        </span>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+
+
+<style>
+.ds-offer-slide {
+  text-align: center;
+}
+.ds-offer-slide:not(:last-child) {
+  margin-bottom: 10px;
+}
+.of-top {
+  font-weight: bold;
+  background: transparent;
+  padding: 10px;
+}
+.of-bt {
+  font-size: 2rem;
+  padding: 10px;
+}
+.of-bt span {
+  text-transform: uppercase;
+  font-weight: 700;
+  display: inline-block;
+  line-height: 1;
+  padding: 9px 17px;
+  border-radius: 8px;
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+@media(max-width: 768px) {
+  .of-bt {
+    font-size: 1.5rem;
+  }
+}
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll('.code-btn');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', function () {
+        const code = this.textContent.trim();
+
+        navigator.clipboard.writeText(code).then(() => {
+          this.textContent = 'Copied!';
+          setTimeout(() => {
+            this.textContent = code;
+          }, 2000);
+        }).catch(err => {
+          console.error('Failed to copy!', err);
+        });
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Offers With Copy code",
+  "settings": [
+    {
+      "type": "font_picker",
+      "id": "block_font",
+      "label": "Font Family for All Offers",
+      "default": "assistant_n4"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "Offer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "offer_title",
+          "label": "Offer Title",
+          "default": "Get 10% OFF on order value of ₹10,000"
+        },
+        {
+          "type": "text",
+          "id": "offer_code",
+          "label": "Coupon Code",
+          "default": "KRIDHA10000"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#5d3125"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Dashed Border Color",
+          "default": "#5d3125"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "Button Background Color",
+          "default": "#5d3125"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "code_bg_color",
+          "label": "Coupon Code Background Color",
+          "default": "#491f13"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Offers With Copy code",
+      "category": "Promotions",
+      "blocks": [
+        { "type": "offer" }
+      ]
+    }
+  ]
+}
+{% endschema %}
