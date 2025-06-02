@@ -1,9 +1,14 @@
-// controllers/uploadBlockSection.js
 import dotenv from "dotenv";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
+
 const BLOCK_FILE_MAP = {
   '011': 'offers-with-copycode.liquid',
   'block-2': 'hero-banner.liquid',
@@ -16,24 +21,21 @@ const uploadBlockSection = async (req, res) => {
   console.log('Received request to upload section:', { shop, blockId });
   const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
 
-  // Match blockId to a liquid file
   const matchedFile = BLOCK_FILE_MAP[blockId];
   if (!matchedFile) {
     return res.status(400).json({ error: `No section mapped for blockId: ${blockId}` });
   }
 
   const sectionKey = `sections/${matchedFile}`;
+  const sectionPath = path.join(__dirname, '../files', matchedFile);
 
   try {
-    // 1. Read the content of the matched liquid file
-    const sectionPath = path.join(__dirname, '../files', matchedFile);
     if (!fs.existsSync(sectionPath)) {
       return res.status(404).json({ error: `File not found: ${matchedFile}` });
     }
 
     const sectionContent = fs.readFileSync(sectionPath, 'utf-8');
 
-    // 2. Get the active theme
     const themesResponse = await axios.get(`https://${shop}/admin/api/2023-10/themes.json`, {
       headers: {
         'X-Shopify-Access-Token': accessToken,
@@ -48,7 +50,6 @@ const uploadBlockSection = async (req, res) => {
     const themeId = activeTheme.id;
     console.log('Active theme found:', activeTheme.name);
 
-    // 3. Upload the section file
     await axios.put(
       `https://${shop}/admin/api/2023-10/themes/${themeId}/assets.json`,
       {
