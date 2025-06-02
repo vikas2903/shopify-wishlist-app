@@ -52,6 +52,7 @@ const countItems = async (queryName) => {
   return count;
 };
 
+// Updated getDashboardData function
 export const getDashboardData = async (req, res) => {
   try {
     const { range = '7d' } = req.query;
@@ -77,7 +78,6 @@ export const getDashboardData = async (req, res) => {
     const startISO = new Date(startDate.setUTCHours(0, 0, 0, 0)).toISOString();
     const todayISO = new Date(new Date().setUTCHours(0, 0, 0, 0)).toISOString();
 
-    // Fetch all orders since start date
     const ordersQuery = `
       {
         orders(first: 250, query: "created_at:>=${startISO}") {
@@ -85,6 +85,11 @@ export const getDashboardData = async (req, res) => {
             node {
               id
               createdAt
+              totalPriceSet {
+                shopMoney {
+                  amount
+                }
+              }
             }
           }
         }
@@ -94,28 +99,38 @@ export const getDashboardData = async (req, res) => {
     const ordersRes = await shopifyFetch(ordersQuery);
     const orders = ordersRes?.data?.orders?.edges || [];
 
-    // Count today's orders
     const orderTodayCount = orders.filter(order => order.node.createdAt >= todayISO).length;
 
-    // Group orders by date
-    const groupedOrders = {};
+    const groupedData = {};
     orders.forEach(({ node }) => {
       const date = new Date(node.createdAt).toISOString().split('T')[0];
-      groupedOrders[date] = (groupedOrders[date] || 0) + 1;
+      const amount = parseFloat(node.totalPriceSet.shopMoney.amount || 0);
+
+      if (!groupedData[date]) {
+        groupedData[date] = { orders: 0, revenue: 0 };
+      }
+
+      groupedData[date].orders += 1;
+      groupedData[date].revenue += amount;
     });
 
-    const orderTrends = Object.entries(groupedOrders)
+    const dayWiseData = Object.entries(groupedData)
       .sort(([a], [b]) => new Date(a) - new Date(b))
-      .map(([date, count]) => ({ date, count }));
+      .map(([date, data]) => {
+        const sessions = 1000; // Dummy session count
+        const conversionRate = ((data.orders / sessions) * 100).toFixed(2);
+        return {
+          date,
+          orders: data.orders,
+          revenue: parseFloat(data.revenue.toFixed(2)),
+          conversionRate: `${conversionRate}%`
+        };
+      });
 
     // Additional counts
     const totalOrderCount = await countItems("orders");
     const productCount = await countItems("products");
     const customerCount = await countItems("customers");
-
-    // Dummy sessions for conversion rate
-    const sessions = 1000;
-    const conversionRate = ((orderTodayCount / sessions) * 100).toFixed(2);
 
     res.json({
       success: true,
@@ -123,8 +138,7 @@ export const getDashboardData = async (req, res) => {
       totalOrderCount,
       productCount,
       customerCount,
-      conversionRate: `${conversionRate}%`,
-      orderTrends
+      dayWiseData
     });
 
   } catch (error) {
@@ -134,4 +148,4 @@ export const getDashboardData = async (req, res) => {
       details: error.message
     });
   }
-};
+}; 
