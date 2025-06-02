@@ -1,8 +1,9 @@
 import express from 'express';
-import uploadBlockSection from '../controller/uploadBlockSection.js';
+import uploadBlockSection from '../controller/uploadcontroller.js';
 
 const uploadroute = express.Router();
 
-uploadroute.post('/section', uploadBlockSection);
+// Upload section route
+uploadroute.post('/upload-section', uploadBlockSection);
 
 export default uploadroute; 
