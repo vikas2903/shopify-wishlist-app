@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import route from "./route/wishlistroute.js";
 import apitokenroute from "./route/apitokenroute.js";
 import dashboardroute from "./route/dashboardRoutes.js";
-import uploadroute from "./route/uploadroute.js";
+import uploadroute from  "./route/uploadroute.js ";
 
 dotenv.config();
 const app = express();
