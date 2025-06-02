@@ -1,6 +1,6 @@
 const express = require('express');
 
-import  {uploadBlockSection} from ('../controller/uploadBlockSection.js');
+import  {uploadBlockSection} from '../controller/uploadBlockSection.js';
 
 const uploadroute = express.Router();
 
