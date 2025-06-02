@@ -1,9 +1,9 @@
 // controllers/uploadBlockSection.js
-require('dotenv').config();
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-
+import dotenv from "dotenv";
+import axios from "axios";
+import fs from "fs";
+import path from "path";
+dotenv.config();
 const BLOCK_FILE_MAP = {
   '011': 'offers-with-copycode.liquid',
   'block-2': 'hero-banner.liquid',
