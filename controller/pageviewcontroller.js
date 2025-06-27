@@ -32,8 +32,6 @@ export const trackPageView = async (req, res) => {
 //   });
 };
 
-
-
 export const getPageViews = async (req, res) => {
    const { shop, date } = req.query;
 
@@ -53,5 +51,71 @@ export const getPageViews = async (req, res) => {
   } catch (err) {
     console.error('Error fetching views:', err);
     res.status(500).json({ error: 'Server error' });
+  }
+};
+
+export const deletePageView = async (req, res) => {
+  const {shop, date } = req.query;
+
+  if (!shop || !date) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    const result = await Pageview.deleteOne({ shop, date });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "Pageview not found" });
+    }
+
+    res.status(200).json({ message: "Pageview deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting page view:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export const deletePageViewsByShopAndDate = async (req, res) => {
+  const { shop, date } = req.query;
+
+  if (!shop || !date) {
+    return res.status(400).json({ error: "Missing required query params: shop and date" });
+  }
+
+  try {
+    const result = await Pageview.deleteMany({ shop, date });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No pageviews found for the given shop and date" });
+    }
+
+    res.status(200).json({
+      message: "Pageviews deleted successfully",
+      deletedCount: result.deletedCount
+    });
+  } catch (error) {
+    console.error("Error deleting pageviews:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const trackAddToCart = async (req, res) => {
+  const { productId, productHandle, shop } = req.body;
+  const date = new Date().toISOString().split("T")[0];
+
+  try {
+    const result = await Pageview.findOneAndUpdate(
+      { productId, shop, date },
+      {
+        $inc: { addToCartClicks: 1 },
+        $set: { productHandle }
+      },
+      { upsert: true, new: true }
+    );
+
+    return res.status(200).json({ message: "Add to Cart tracked", data: result });
+  } catch (error) {
+    console.error("Error tracking Add to Cart:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };

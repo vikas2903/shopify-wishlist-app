@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const PageviewSchema = new mongoose.Schema({
   productId: {
-    type: String, // or Number if Shopify product IDs are numeric
+    type: String,
     required: true,
   },
   productHandle: {
@@ -14,12 +14,20 @@ const PageviewSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: String, // Format: YYYY-MM-DD
+    type: String,
     required: true,
   },
   views: {
     type: Number,
     default: 1,
+  },
+  addToCartClicks: {
+    type: Number,
+    default: 0,
+  },
+  checkoutClicks: {
+    type: Number,
+    default: 0,
   },
 });
 
