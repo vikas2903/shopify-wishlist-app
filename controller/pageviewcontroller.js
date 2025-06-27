@@ -23,13 +23,13 @@ export const trackPageView = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 
-  console.log("Received data:", req.body);
-  res.json({
-    message: "Data received successfully",
-    productId,
-    productHandle,
-    shop,
-  });
+//   console.log("Received data:", req.body);
+//   res.json({
+//     message: "Data received successfully",
+//     productId,
+//     productHandle,
+//     shop,
+//   });
 };
 
 
