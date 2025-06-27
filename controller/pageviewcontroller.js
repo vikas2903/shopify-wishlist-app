@@ -99,7 +99,7 @@ export const deletePageViewsByShopAndDate = async (req, res) => {
   }
 };
 
-export const trackAddToCart = async (req, res) => {
+export const trackCheckoutClick = async (req, res) => {
   const { productId, productHandle, shop } = req.body;
   const date = new Date().toISOString().split("T")[0];
 
@@ -107,15 +107,16 @@ export const trackAddToCart = async (req, res) => {
     const result = await Pageview.findOneAndUpdate(
       { productId, shop, date },
       {
-        $inc: { addToCartClicks: 1 },
+        $inc: { checkoutClicks: 1 },
         $set: { productHandle }
       },
       { upsert: true, new: true }
     );
 
-    return res.status(200).json({ message: "Add to Cart tracked", data: result });
+    return res.status(200).json({ message: "Checkout click tracked", data: result });
   } catch (error) {
-    console.error("Error tracking Add to Cart:", error);
+    console.error("Error tracking Checkout click:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+ 
