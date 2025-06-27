@@ -4,7 +4,7 @@ export const trackPageView = async (req, res) => {
   const { productId, productHandle, shop } = req.body;
   try {
     const today = new Date().toISOString().split("T")[0];
-    console.log("vikas", today);
+  
 
     const result = await Pageview.findOneAndUpdate(
       {
