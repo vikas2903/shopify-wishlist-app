@@ -11,6 +11,7 @@ export const trackPageView = async (req, res) => {
         productId: productId,
         date: today,
         shop: shop,
+        
       },
       { $inc: { views: 1 }, $set: { productHandle } },
       { upsert: true, new: true }
@@ -26,7 +27,7 @@ export const trackPageView = async (req, res) => {
   res.json({
     message: "Data received successfully",
     productId,
-    producthandle,
+    productHandle,
     shop,
   });
 };
