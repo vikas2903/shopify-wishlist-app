@@ -46,6 +46,8 @@ export const getPageViews = async (req, res) => {
       shop,
       date,
       total: views.length,
+      addToCartClicks,
+      checkoutClicks,
       products: views
     });
   } catch (err) {
