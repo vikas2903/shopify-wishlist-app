@@ -1,5 +1,7 @@
 import Pageview from "../models/pageview.js";
 
+
+
 export const trackPageView = async (req, res) => {
   const { productId, productHandle, shop } = req.body;
   try {
@@ -31,7 +33,7 @@ export const trackPageView = async (req, res) => {
 //     shop,
 //   });
 };
-
+ 
 export const getPageViews = async (req, res) => {
    const { shop, date } = req.query;
 
@@ -46,8 +48,6 @@ export const getPageViews = async (req, res) => {
       shop,
       date,
       total: views.length,
-      addToCartClicks,
-      checkoutClicks,
       products: views
     });
   } catch (err) {
