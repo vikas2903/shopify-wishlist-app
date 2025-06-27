@@ -31,3 +31,27 @@ export const trackPageView = async (req, res) => {
     shop,
   });
 };
+
+
+
+export const getPageViews = async (req, res) => {
+   const { shop, date } = req.query;
+
+  if (!shop || !date) {
+    return res.status(400).json({ error: "Missing 'shop' or 'date' parameter" });
+  }
+
+  try {
+    const views = await Pageview.find({ shop, date }).sort({ views: -1 });
+
+    res.status(200).json({
+      shop,
+      date,
+      total: views.length,
+      products: views
+    });
+  } catch (err) {
+    console.error('Error fetching views:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

@@ -34,6 +34,7 @@ async function startServer() {
     app.use("/api", apitokenroute)
     app.use("/api", dashboardroute);
     app.use("/api", pageviewsroutes);
+    
     app.get("/vikas", (req, res) => {
         res.status(200).json({ message: "Vikas is here" });
     });
@@ -51,3 +52,6 @@ async function startServer() {
   }
 }
 startServer();
+
+
+
