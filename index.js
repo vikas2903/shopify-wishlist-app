@@ -6,6 +6,7 @@ import route from "./route/wishlistroute.js";
 import apitokenroute from "./route/apitokenroute.js";
 import dashboardroute from "./route/dashboardRoutes.js";
 import uploadroute from  "./route/uploadroute.js";
+import pageviewsroutes from "./route/pageviewroute.js";
 
 dotenv.config();
 const app = express();
@@ -32,7 +33,10 @@ async function startServer() {
     app.use("/api", uploadroute);
     app.use("/api", apitokenroute)
     app.use("/api", dashboardroute);
-
+    app.use("/api", pageviewsroutes);
+    app.get("/vikas", (req, res) => {
+        res.status(200).json({ message: "Vikas is here" });
+    });
     // Test connection route
     app.get("/wishlist", (req, res) => {
       res.status(200).json({ mongo: "connected" });
