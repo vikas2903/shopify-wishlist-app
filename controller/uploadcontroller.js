@@ -40,7 +40,8 @@ const uploadBlockSection = async (req, res) => {
     }
 
     // Get template file
-    const templateFile = BLOCK_FILE_MAP[blockId];
+
+
     if (!templateFile) {
       return res.status(400).json({
         success: false,
