@@ -9,6 +9,7 @@ import uploadroute from  "./route/uploadroute.js";
 import pageviewsroutes from "./route/pageviewroute.js";
 import visitorroute from "./route/visitorroutes.js";
 import cartroute from "./route/cardsroute.js";
+import checkoutsessionroute from "./route/checkoutsessionroute.js";
 
 dotenv.config();
 const app = express();
@@ -38,6 +39,7 @@ async function startServer() {
     app.use("/api", pageviewsroutes);
     app.use("/api", visitorroute);
     app.use("/api", cartroute);
+    app.use("/api", checkoutsessionroute)
     
     app.get("/vikas", (req, res) => {
         res.status(200).json({ message: "Vikas is here" });
